@@ -40,20 +40,34 @@ Setting `enabled` tot `true` enables or activates the plugin.
 
 ## Usage
 
+
+### Frontend User Accounts
+
+To enable users to edit content in the frontend they must be able to login. Grav separates backend (Admin) and frontend users into separate sessions. Access to the frontend requires a seperate login as documented in the [Grav Login plugin](https://github.com/getgrav/grav-plugin-login) or the [Private Grav Plugin](https://github.com/Diyzzuf/grav-plugin-private).
+
+Add the required authorization to each user in the user's account file:
+
+```
+access:
+  site:
+    login: 'true'
+    editable: 'true'
+```
+
 ### Enabling page editing
 
-To make a page editable add these lines to the page header or frontmatter:
+To make a single page editable add these lines to the page header or frontmatter:
 
 ```
 editable-simplemde:
     self: true
 ```
 
-This method works on a per page basis.
+In case all pages need to be made editable make the setting site wide by adding the above lines to the plugin configuration file. In that case, to exclude pages from being editable set `self` to `false`.
 
-When all pages need to be made editable make the setting site wide by adding the above lines to the plugin configuration file. In that case, to exclude pages from being editable set `self` to `false`.
+### Page Media
 
-Files and images that are uploaded are saved in the same folder as the corresponding page.
+Images and files that are uploaded are saved in the same folder as the corresponding page. Uploaded images and files that are no longer referenced in the markdown content are automatically deleted when the page is saved.
 
 ## Credits
 
