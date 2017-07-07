@@ -1,3 +1,9 @@
+# v0.1.3
+##  07/07/2017
+
+1. [](#changed)
+    * Removed testing flag and fixed broken link
+
 # v0.1.2
 ##  07/07/2017
 
