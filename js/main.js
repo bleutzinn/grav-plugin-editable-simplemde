@@ -48,11 +48,11 @@ $(function () {
 		// Add and configure image upload input field
 		allowedImageExts = 'jpg,jpeg,png,gif,svg';
 		allowedImageTypes = 'image/gif,image/x-gif,image/jpeg,image/pjpeg,image/png,image/x-png,image/svg+xml';
-		$("<input type='file' id='upload_image' accept='"+allowedImageTypes+"' style='display: none!important;' />").appendTo("body");
+		$("<input type='file' id='upload_image' accept='"+allowedImageTypes+"' style='display: none;' />").appendTo("body");
 		// Add and configure file upload input field
 		allowedFileExts = 'css,doc,docx,gif,jpg,jpeg,png,mp3,mp4,pdf,ppt,pptx,svg,txt,xls,xlsx,zip';
 		allowedFileTypes = 'application/msword,application/pdf,application/x-pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,application/zip,text/css,text/plain,audio/mp3,video/mpeg,video/mp4,' + allowedImageTypes;
-		$("<input type='file' id='upload_file' accept='"+allowedFileTypes+"' style='display: none!important;' />").appendTo("body");
+		$("<input type='file' id='upload_file' accept='"+allowedFileTypes+"' style='display: none;' />").appendTo("body");
 	}
 
 	$("input[id='upload_image']").change(function() {
@@ -84,20 +84,20 @@ $(function () {
 	    function(){
 		  	if (mode) {
 		  		// In Edit mode, so swith to Preview mode
-		      $("div#editor_container").css('display', 'none', '!important');
+		      $("div#editor_container").css('display', 'none');
 		      preview(simplemde.value());
 		      $("#edit_btn").html('<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Edit');
 		      if (md5(simplemde.value()) === originalMD5) {
-		      	$("#save_btn").css('display', 'none', '!important');
+		      	$("#save_btn").css('display', 'none');
 		      }
 		    }
 		    else {
 		      // In Preview mode, so switch to Edit mode
-		      $("div#editor_container").css('display', 'inline', '!important');
+		      $("div#editor_container").css('display', 'inline');
 		      // Do a refresh to show the editor value
 		      simplemde.codemirror.refresh();
 		      $("#edit_btn").html('<i class="fa fa-times fa-lg" aria-hidden="true"></i>&nbsp;Close');
-		      $("#save_btn").css('display', 'inline', '!important');
+		      $("#save_btn").css('display', 'inline');
 		      $('#html_container').empty();
 		    };
 		    mode = !mode;
@@ -139,7 +139,7 @@ $(function () {
 	function doUpload(saveURL, data, link, allowedExts, allowedTypes,	maxFileSize) {
 		// Upload the file
 		$(this).simpleUpload(saveURL, {
-			data,
+			data: data,
 			allowedExts: allowedExts,
 			allowedTypes: allowedTypes,
 			maxFileSize: maxFileSize,
@@ -214,7 +214,7 @@ $(function () {
 					originalMD5 = md5(markdown);
 					if (!mode) {
 						setTimeout(function() {
-							$("#save_btn").css('display', 'none', '!important');
+							$("#save_btn").css('display', 'none');
 						}, delay);
 					}
 					window.onbeforeunload = null;
