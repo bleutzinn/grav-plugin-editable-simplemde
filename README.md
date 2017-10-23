@@ -56,6 +56,8 @@ access:
 
 ### Enabling page editing
 
+#### Per page
+
 To make a single page editable add these lines to the page header or frontmatter:
 
 ```
@@ -63,7 +65,21 @@ editable-simplemde:
     self: true
 ```
 
-In case all pages need to be made editable make the setting site wide by adding the above lines to the plugin configuration file. In that case, to exclude pages from being editable set `self` to `false`.
+#### Site wide
+
+In case all pages need to be made editable make the setting site wide by adding `self: true` to the plugin configuration file `editable-simplemde.yaml`:
+
+```
+enabled: true
+self: true
+```
+
+When using the site wide option then to exclude a page from being editable set `self` to `false` in that page's frontmatter:
+
+```
+editable-simplemde:
+    self: false
+```
 
 ### Page Media
 
