@@ -139,7 +139,7 @@ $(function () {
 	function doUpload(saveURL, data, link, allowedExts, allowedTypes,	maxFileSize) {
 		// Upload the file
 		$(this).simpleUpload(saveURL, {
-			data,
+			data: data,
 			allowedExts: allowedExts,
 			allowedTypes: allowedTypes,
 			maxFileSize: maxFileSize,
