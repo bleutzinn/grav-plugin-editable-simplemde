@@ -40,12 +40,15 @@ Setting `enabled` tot `true` enables or activates the plugin.
 
 ## Usage
 
+### User Permissions
 
-### Frontend User Accounts
+#### Frontend Users
 
-To enable users to edit content in the frontend they must be able to login. Grav separates backend (Admin) and frontend users into separate sessions. Access to the frontend requires a seperate login as documented in the [Grav Login plugin](https://github.com/getgrav/grav-plugin-login) or the [Private Grav Plugin](https://github.com/Diyzzuf/grav-plugin-private).
+To enable users to edit content in the frontend they must be able to login. 
 
-Add the required authorization to each user in the user's account file:
+Access to the frontend requires a seperate login as documented in the [Grav Login plugin](https://github.com/getgrav/grav-plugin-login) or the [Private Grav Plugin](https://github.com/Diyzzuf/grav-plugin-private).
+
+To edit a page a frontend user must have the permission `site.editable`. Add the required authorization to each user in the user's account file:
 
 ```
 access:
@@ -53,6 +56,14 @@ access:
     login: 'true'
     editable: 'true'
 ```
+
+#### Backend Users
+
+By default Grav separates backend (Admin) and frontend users into separate sessions.   
+Allowing backend users to edit pages in the frontend requires the Grav option `session.split` to be set to `false` (in `system.yaml` or in the Admin panel).
+
+A backend or Admin user must have the permission `admin.super` or `admin.pages` to be allowed to edit a page.
+
 
 ### Enabling page editing
 
@@ -81,9 +92,35 @@ editable-simplemde:
     self: false
 ```
 
+#### Per User
+
+A page can be made editable by one or more users or groups.
+
+Given this page's frontmatter:
+
+```
+editable-simplemde:
+    self: true
+    editable_by:
+        - brigitte
+        - tom
+        -
+            users:
+                - frank
+                - jane
+        -
+            groups:
+                - editors
+        - trinity
+```
+
+and assuming user permissions are set right, only the named users plus the users belonging to the group "editors" are allowed to edit that page.
+
 ### Page Media
 
-Images and files that are uploaded are saved in the same folder as the corresponding page. Uploaded images and files that are no longer referenced in the markdown content are automatically deleted when the page is saved.
+Images and files that are uploaded are saved in the same folder as the corresponding page.
+
+>**Note:** Uploaded images and files that are no longer referenced in the page markdown content are automatically deleted when the page is saved.
 
 ## Credits
 
@@ -91,5 +128,5 @@ Thanks go to Team Grav and everyone on the [Grav Forum](https://getgrav.org/foru
 
 ## To Do
 
-- [ ] Turn the editor toolbar into an affix style toolbar so it stays in view when editing longer texts. Help is required!
+- [ ] Make the editor toolbar sticky so it stays in view when editing longer texts. See this [Proof of Concept](https://codepen.io/bleutzinn/pen/KmNWmp) but help is required to make it work with Grav!
 
