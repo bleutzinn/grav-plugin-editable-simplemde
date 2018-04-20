@@ -1,11 +1,11 @@
 name: Editable With SimpleMDE
-version: 0.1.0
-testing: false
+version: 1.0.0
+testing: true
 description: Edit page content in the frontend using the SimpleMDE markdown editor
 icon: edit
 author:
   name: Ron Wardenier
-  email: bleutzinn@festeto.com
+  email: ron@rwgc.nl
 homepage: https://github.com/bleutzinn/grav-plugin-editable-simplemde
 demo: 
 keywords: plugin, editor, wysiwyg, markdown, editing, editable, front-end
