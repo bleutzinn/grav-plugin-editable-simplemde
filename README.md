@@ -2,33 +2,27 @@
 
 The **Editable with SimpleMDE** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It allows users to edit page content in the frontend using the [SimpleMDE](https://simplemde.com/) editor.
 
-Markdown content in normal Grav pages can be made editable. However, modular pages can not be edited as their content is dynamically created.
+> **Important:** The plugin requires Markdown page content that is transfered by Grav straight from a normal Grav page and presents it in a Markdown editor to be saved back to the page when editing is finished.
+
+> **Warning:** Markdown page content that is manipulated by Twig templates, plugins or Javascript code is likely to interfere or even break the working of this plugin. This is why modular pages can not be edited as their content is dynamically created.
 
 ## Installation
 
-Installing the plugin can be done in one of two ways. The GPM (Grav Package Manager) installation method enables you to quickly and easily install the plugin with a simple terminal command, while the manual method enables you to do so via a zip file.
+Typically the plugin should be installed via GPM (Grav Package Manager):
 
-> NOTE: This plugin is a modular component for Grav which requires [Grav](http://github.com/getgrav/grav) and the [Error](https://github.com/getgrav/grav-plugin-error) and [Problems](https://github.com/getgrav/grav-plugin-problems) to operate.
+```
+$ bin/gpm install editable-simplemde
+```
 
-### GPM Installation (Preferred)
+Or, when using the Admin plugin the plugin can be added from the Plugins section. Look for "Editable With SimpleMDE".
 
-The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line).  From the root of your Grav install type:
-
-    bin/gpm install editable-simplemde
-
-This will install the plugin into your `/user/plugins` directory within Grav. It's files can be found under `/your/site/grav/user/plugins/editable-simplemde`.
-
-### Manual Installation
-
-To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `editable-simplemde`.
-
-You should now have all the plugin files under
-
-    /your/site/grav/user/plugins/editable-simplemde
+Another option is to manualy install the plugin by downloading the plugin as a zip file. Copy the zip file to your /user/plugins directory, unzip it there and rename the folder to editable-simplemde.
 
 ## Configuration
 
-Before configuring this plugin, you should copy the `user/plugins/editable-simplemde/editable-simplemde.yaml` to `user/config/plugins/editable-simplemde.yaml` and only edit that copy.
+Before configuring this plugin, you should copy the `user/plugins/editable-simplemde/editable-simplemde.yaml` to `user/config/plugins/editable-simplemde.yaml`.
+
+Make configuration changes to that copy so your changes will remain when installing a new version of the plugin.
 
 Here is the default configuration and an explanation of available options:
 
@@ -120,13 +114,15 @@ and assuming user permissions are set right, only the named users plus the users
 
 Images and files that are uploaded are saved in the same folder as the corresponding page.
 
->**Note:** Uploaded images and files that are no longer referenced in the page markdown content are automatically deleted when the page is saved.
+> **Note:** Uploaded images and files that are no longer referenced in the page markdown content are automatically deleted when the page is saved.
 
 ## Credits
 
 Thanks go to Team Grav and everyone on the [Grav Forum](https://getgrav.org/forum) for creating and supporting Grav.
 
-## To Do
+## Notes, Issues and To Do's
 
-- [ ] Make the editor toolbar sticky so it stays in view when editing longer texts. See this [Proof of Concept](https://codepen.io/bleutzinn/pen/KmNWmp) but help is required to make it work with Grav!
+- Make the editor toolbar sticky so it stays in view when editing longer texts. See this [Proof of Concept](https://codepen.io/bleutzinn/pen/KmNWmp) but help is required to make it work with Grav!
+- Navigating away from a page with yet unsaved changes is not handled properly for all browsers.
+
 
