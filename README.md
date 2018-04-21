@@ -88,7 +88,7 @@ editable-simplemde:
 
 #### Per User
 
-A page can be made editable by one or more users or groups.
+A page can be made editable by one or more users or groups. To learn about users, groups and permissions see the documentation on [Groups and Permissions](https://learn.getgrav.org/advanced/groups-and-permissions), the [Login Plugin](https://github.com/getgrav/grav-plugin-login) and [Standard Administration Panel Plugin](https://github.com/getgrav/grav-plugin-admin). 
 
 Given this page's frontmatter:
 
