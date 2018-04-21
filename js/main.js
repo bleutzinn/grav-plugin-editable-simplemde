@@ -188,6 +188,7 @@ $(function () {
 			success: function(response)
 			{
 				$('#html_container').wrapInner(response);
+				highlightCodeBlock();
 			}
 		});
 	};
@@ -231,3 +232,10 @@ $(function () {
 	};
 
 });
+
+function highlightCodeBlock() {
+	if (typeof hljs == 'object')
+		$('#html_container pre code').each(function (i, e) {
+			hljs.highlightBlock(e);
+		});
+}
