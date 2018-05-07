@@ -1,3 +1,16 @@
+# v1.1.0
+##  04/21/2018
+
+1. [](#new)
+    * In edit mode syntax highlighting in preview is active when using the Grav Highlight Plugin
+
+# v1.0
+##  04/20/2018
+
+1. [](#new)
+    * Added multi user editing. Allows editing of a page by individual users.
+    * Added support for editing by backend users (requires "Split sessions" to be off)
+
 # v0.1.3
 ##  07/07/2017
 
