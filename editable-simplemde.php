@@ -277,9 +277,9 @@ class EditableSimpleMDEPlugin extends Plugin
         }
         // Initialize the preferred variant of Parsedown
         if ($defaults['extra']) {
-            $parsedown = new ParsedownExtra($this, $defaults);
+            $parsedown = new ParsedownExtra(null, $defaults);
         } else {
-            $parsedown = new Parsedown($this, $defaults);
+            $parsedown = new Parsedown(null, $defaults);
         }
 
         $language = trim(basename($page->extension(), 'md'), '.') ?: null;
