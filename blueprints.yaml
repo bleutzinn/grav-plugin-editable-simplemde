@@ -1,6 +1,6 @@
 name: Editable With SimpleMDE
-version: 1.0.0
-testing: true
+version: 1.0.1
+testing: false
 description: Edit page content in the frontend using the SimpleMDE markdown editor
 icon: edit
 author:
@@ -12,6 +12,9 @@ keywords: plugin, editor, wysiwyg, markdown, editing, editable, front-end
 bugs: https://github.com/bleutzinn/grav-plugin-editable-simplemde/issues
 docs: https://github.com/bleutzinn/grav-plugin-editable-simplemde/blob/master/README.md
 license: MIT
+
+dependencies:
+    - { name: grav, version: '>=1.6.0' }
 
 form:
   validation: strict
