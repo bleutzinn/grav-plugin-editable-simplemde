@@ -1,3 +1,11 @@
+# v1.1.1
+##  07/09/2019
+
+1. [](#bugfix)
+    * Fixed problem with markdown parsers introduced with Grav 1.6 [#12](https://github.com/bleutzinn/grav-plugin-editable-simplemde/issues/12)
+1. [](#new)
+    * Introduced dependency upon Grav core version 1.6 and above
+
 # v1.1.0
 ##  04/21/2018
 
