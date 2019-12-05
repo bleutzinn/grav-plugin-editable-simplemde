@@ -1,3 +1,9 @@
+# v1.1.2
+##  12/05/2019
+
+1. [](#bugfix)
+    * Fixed inconsistancies in version numbering which prevented the addition of the latest update in the Grav Plugin repository. 
+
 # v1.1.1
 ##  07/09/2019
 
