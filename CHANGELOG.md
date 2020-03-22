@@ -1,3 +1,9 @@
+# v1.2.0
+##  03/22/2020
+
+1. [](#bugfix)
+    * Fixed incorrect handling of 'editable_by' config in page frontmatter. 
+
 # v1.1.2
 ##  12/05/2019
 

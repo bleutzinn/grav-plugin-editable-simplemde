@@ -1,5 +1,5 @@
 name: Editable With SimpleMDE
-version: 1.1.2
+version: 1.2.0
 testing: false
 description: Edit page content in the frontend using the SimpleMDE markdown editor
 icon: edit
