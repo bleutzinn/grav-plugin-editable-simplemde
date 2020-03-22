@@ -79,55 +79,72 @@ class EditableSimpleMDEPlugin extends Plugin
         $config = $this->mergeConfig($page);
         
         $editable_self = $config->get('self');
-        if ($editable_self) { // Page is editable
-            $header = (array)$page->header();
-            // Get the groups this user is a member of
-            $groups = $this->grav['user']->get('groups');
-            // Check whether only certain users or groups may edit this page
-            
-            $editable_by = $config->get('editable_by');
+        $editable_by = (array) $config->get('editable_by');
 
-            if (isset($editable_by)) {
-                //$editable_by = $config->get('editable_by');
-                for ($i=0; $i < count($editable_by); $i++) {
-                    //dump($editable_by[$i]);
-                    if (is_array($editable_by[$i])) { // Array encountered
-                        foreach ($editable_by[$i] as $key => $value) {
-                            // Examine each element and check for a groups variable
-                            if ($key == 'groups') {
-                                // Match the groups specified in the editable_by variable
-                                // to the groups this user belongs to
-                                $match = array_intersect($value, $groups);
-                                if (!empty($match)) { // Bingo! There's a match
-                                    $result = true;
+        if ($editable_self || !is_null($editable_by)) { // Page is editable
+
+            // Allow editable to admin users
+            if ( $this->grav['user']->authorize('admin.super') || $this->grav['user']->authorize('admin.pages') ) {
+                $result = true;
+            }
+            else {
+                // Check for editable_by with named users and groups
+                $header = (array)$page->header();
+
+                // Get the groups this user is a member of
+                $user_in_groups = $this->grav['user']->get('groups');
+                
+                // Check whether only certain users or groups may edit this page
+                if (isset($editable_by)) {
+                    
+                    foreach ($editable_by as $type => $list) {
+                        if($type !== 'groups') {
+                            $type = 'users';
+                        }
+                        
+                        if (!is_array($list)) {
+                            
+                            if($type == 'groups' && !is_null($user_in_groups)) {
+                                $match = (in_array($list, array_values($user_in_groups))); // array_values() is required to convert to numeric array
+                                if($match) {
                                     break; // Break from the foreach loop
                                 }
                             }
                             else {
-                                if ($key == 'users') {
-                                    // Find the logged in user in the list of users
-                                    $match = array_search($username, $value);
-                                    
-                                    if ($match != false) { // Bingo! There's a match
-                                        $result = true;
-                                        break; // Break from the foreach loop
-                                    }
+                                $match = ($list == $username);
+                                if($match) {
+                                    break; // Break from the foreach loop
                                 }
                             }
                         }
-                    }
-                    else { // Must be a username
-                        if ($editable_by[$i] == $username) { // Bingo ! A username match
-                            $result = true;
-                            break; // Break from the for loop
+                        else {
+                            foreach ($list as $key => $value) {
+                                if(!is_numeric($key)) {
+                                    $type = $key;
+                                }
+
+                                if (!is_array($value)) {
+                                    $value = (array) $value;
+                                }
+                                if($type == 'groups' && !is_null($user_in_groups)) {
+                                    $match = !empty(array_intersect($value, $user_in_groups));
+                                    if($match) {
+                                        break 2; // Break from the outer foreach loop
+                                    }
+                                }
+                                else {
+                                    $match = (in_array($username, $value));
+                                    if($match) {
+                                        break 2; // Break from the outer foreach loop
+                                    }
+                                }
+
+                            }
                         }
                     }
+
+                    $result = $match;
                 }
-            }
-            else {
-                // No specific users or groups specified so grant access to
-                // the logged in user with proper permissions
-                $result = $this->grav['user']->authorize('site.editable') || $this->grav['user']->authorize('admin.super') || $this->grav['user']->authorize('admin.pages');
             }
         }
         return $result;
@@ -153,7 +170,8 @@ class EditableSimpleMDEPlugin extends Plugin
             $config = $this->mergeConfig($page);
             $editable_self = $config->get('self');
             $username = $this->grav['user']->get('username');
-            if ($editable_self && $this->isAuthorized($page, $username)) {
+            
+            if ($editable_self || $this->isAuthorized($page, $username)) {
                 $this->addAssets();
                 $name = 'editable' . str_replace('/', '___', $page->route());
                 $this->config->set('plugins' . $this->myName . 'id', $name);
@@ -175,6 +193,8 @@ class EditableSimpleMDEPlugin extends Plugin
             $this->active = false;
             return;
         }
+
+        $this->grav['log']->info('In onPagesInitialized()');
 
         // Do not act upon empty POST payload
         $post = $_POST;
