@@ -34,65 +34,118 @@ Setting `enabled` tot `true` enables or activates the plugin.
 
 ## Usage
 
-### User Permissions
-
-#### Frontend Users
+### Frontend login permission 
 
 To enable users to edit content in the frontend they must be able to login. 
 
 Access to the frontend requires a seperate login as documented in the [Grav Login plugin](https://github.com/getgrav/grav-plugin-login) or the [Private Grav Plugin](https://github.com/Diyzzuf/grav-plugin-private).
 
-To edit a page a frontend user must have the permission `site.editable`. Add the required authorization to each user in the user's account file:
+To login to the frontend a user must have the permission `site.login`. Add the required authorization to each user in the user's account file:
 
+```yaml
+access:
+  site:
+    login: 'true'
 ```
+
+
+### Editable permission
+
+To edit a frontend page a frontend user must have the permission `site.editable`. Add this authorization to each user in the user's account file as well:
+
+```yaml
 access:
   site:
     login: 'true'
     editable: 'true'
 ```
 
-#### Backend Users
-
-By default Grav separates backend (Admin) and frontend users into separate sessions.   
-Allowing backend users to edit pages in the frontend requires the Grav option `session.split` to be set to `false` (in `system.yaml` or in the Admin panel).
-
-A backend or Admin user must have the permission `admin.super` or `admin.pages` to be allowed to edit a page.
-
-
 ### Enabling page editing
 
-#### Per page
+#### Making all pages editable (site wide)
 
-To make a single page editable add these lines to the page header or frontmatter:
+In case all pages need to be made editable make the setting site wide by adding `self: true` to the plugin configuration file `editable-simplemde.yaml`:
 
+```yaml
+enabled: true
+  self: true
 ```
+
+
+#### Making a single page editable (or not)
+
+When not using the site wide option, to make a single page editable add these lines to a page frontmatter:
+
+```yaml
 editable-simplemde:
     self: true
 ```
 
-#### Site wide
+To exclude a page from being editable set `self` to `false` in that page's frontmatter:
 
-In case all pages need to be made editable make the setting site wide by adding `self: true` to the plugin configuration file `editable-simplemde.yaml`:
-
-```
-enabled: true
-self: true
-```
-
-When using the site wide option then to exclude a page from being editable set `self` to `false` in that page's frontmatter:
-
-```
+```yaml
 editable-simplemde:
     self: false
 ```
 
-#### Per User
+#### Making a page editable by users or groups
 
-A page can be made editable by one or more users or groups. To learn about users, groups and permissions see the documentation on [Groups and Permissions](https://learn.getgrav.org/advanced/groups-and-permissions), the [Login Plugin](https://github.com/getgrav/grav-plugin-login) and [Standard Administration Panel Plugin](https://github.com/getgrav/grav-plugin-admin). 
+A page can be made editable by one or more users or groups.
 
-Given this page's frontmatter:
+To learn about users, groups and permissions see the documentation on [Groups and Permissions](https://learn.getgrav.org/advanced/groups-and-permissions), the [Login Plugin](https://github.com/getgrav/grav-plugin-login) and [Standard Administration Panel Plugin](https://github.com/getgrav/grav-plugin-admin). 
 
+Some examples:
+
+Using this frontmatter the page "Headlines" may be edited by the user with username "tom":
+
+```yaml
+title: Headlines
+editable-simplemde:
+    editable_by:
+        tom
 ```
+
+Using this frontmatter the page "Headlines" may be edited by the users (usernames) "tom" and "jerry":
+
+```yaml
+title: Headlines
+editable-simplemde:
+    editable_by:
+        - tom
+        - jerry
+```
+
+Another notation is:
+
+```yaml
+title: Headlines
+editable-simplemde:
+    editable_by:
+        users:
+            - tom
+            - jerry
+```
+
+Using groups is similar. Here the page "Headlines" may be edited by all users belonging to the group "news-editors":
+
+```yaml
+title: Headlines
+editable-simplemde:
+    editable_by:
+        groups: news-editors
+```
+
+As documented in the [Login Plugin](https://github.com/getgrav/grav-plugin-login) adding a user to the group "news-editors" is done by adding these lines to a user's account file:
+
+```yaml
+groups:
+  - news-editors
+```
+
+By using a more complex configuration in the frontmatter it is possible to mix users and groups:
+
+```yaml
+title: Headlines
 editable-simplemde:
     self: true
     editable_by:
@@ -104,17 +157,37 @@ editable-simplemde:
                 - jane
         -
             groups:
-                - editors
-        - trinity
+                - news-editors
 ```
 
-and assuming user permissions are set right, only the named users plus the users belonging to the group "editors" are allowed to edit that page.
+### Example group
+
+A typical basic group configuration (in `user/config/groups.yaml') to accompany the examples then would be:
+
+```yaml
+news-editors:
+  groupname: news-editors
+  description: 'All News Editors'
+  access:
+    site:
+      login: 'true'
+      editable: 'true'
+```
+
+### Allowing backend Users to edit pages in the frontend
+
+Backend users typically work in the Admin panel interface provided by the Admin Plugin interface.
+
+Backend users who have the permission `admin.super` or `admin.pages` are allowed to edit frontend pages.   
+
+These permission take precedence over the `site.editable` permission so backend users need not have the `site.editable` permission in their account file.
+
 
 ### Page Media
 
 Images and files that are uploaded are saved in the same folder as the corresponding page.
 
-> **Note:** Uploaded images and files that are no longer referenced in the page markdown content are automatically deleted when the page is saved.
+> **Note:** Uploaded images and files that are no longer referenced in the page markdown content are automatically deleted when the page is saved!
 
 ## Credits
 
@@ -122,7 +195,5 @@ Thanks go to Team Grav and everyone on the [Grav Forum](https://getgrav.org/foru
 
 ## Notes, Issues and To Do's
 
-- Make the editor toolbar sticky so it stays in view when editing longer texts. See this [Proof of Concept](https://codepen.io/bleutzinn/pen/KmNWmp) but help is required to make it work with Grav!
-- Navigating away from a page with yet unsaved changes is not handled properly for all browsers.
-
-
+- Make the editor toolbar sticky so it stays in view when editing longer texts. See this [Proof of Concept](https://codepen.io/bleutzinn/pen/KmNWmp). Actually this is very theme specific and so unfortunately there is no generic solution.
+- Navigating away from a page with yet unsaved changes is not handled properly in all browsers.
