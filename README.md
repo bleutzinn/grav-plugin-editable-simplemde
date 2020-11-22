@@ -1,4 +1,4 @@
-# Editable with SimpleMDE Plugin
+# Grav Editable with SimpleMDE Plugin
 
 The **Editable with SimpleMDE** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It allows users to edit page content in the frontend using the [SimpleMDE](https://simplemde.com/) editor.
 
