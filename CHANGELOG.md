@@ -1,3 +1,10 @@
+# v1.3.0
+##  11/22/2020
+
+1. [](#bugfix)
+    * Tested with Grav 1.7.0-rc.17
+    * Fixed problem with not displaying edits until saved
+
 # v1.2.0
 ##  03/22/2020
 
