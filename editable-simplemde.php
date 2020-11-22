@@ -302,12 +302,8 @@ class EditableSimpleMDEPlugin extends Plugin
             $parsedown = new Parsedown(null, $defaults);
         }
 
-        $language = trim(basename($page->extension(), 'md'), '.') ?: null;
-        $filename = str_replace($language, $params['lang'], $page->name());
-        $path = $page->path() . DS . $filename;
-        $page->filePath($path);
-        $page->rawMarkdown($params['content']);
-        $html = $parsedown->text($page->content());
+        $html = $parsedown->text($params['content']);
+        
         return $html;
     }
 
