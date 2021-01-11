@@ -1,5 +1,5 @@
 name: Editable With SimpleMDE
-version: 1.2.0
+version: 1.4.0
 testing: false
 description: Edit page content in the frontend using the SimpleMDE markdown editor
 icon: edit
@@ -23,6 +23,16 @@ form:
       type: toggle
       label: Plugin status
       highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    self:
+      type: toggle
+      label: Set all pages as Editable
+      highlight: 0
       default: 0
       options:
         1: Enabled
