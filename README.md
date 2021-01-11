@@ -2,6 +2,8 @@
 
 The **Editable with SimpleMDE** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It allows users to edit page content in the frontend using the [SimpleMDE](https://simplemde.com/) editor.
 
+> Version 1.4.0 has successfully been tested with Grav 1.7.0-rc.20
+
 > **Important:** The plugin requires Markdown page content that is transfered by Grav straight from a normal Grav page and presents it in a Markdown editor to be saved back to the page when editing is finished.
 
 > **Warning:** Markdown page content that is manipulated by Twig templates, plugins or Javascript code is likely to interfere or even break the working of this plugin. This is why modular pages can not be edited as their content is dynamically created.
@@ -28,9 +30,11 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
+self: false
 ```
 
-Setting `enabled` tot `true` enables or activates the plugin.
+- enabled: Setting `enabled` to `true` enables or activates the plugin.
+- self: When set to `true` all pages are editable, site wide.
 
 ## Usage
 
