@@ -1,3 +1,13 @@
+# v1.4.0
+##  01/11/2021
+
+1. [](#update)
+    * Tested successfully with Grav v1.7.0-rc.20
+1. [](#improved)
+    * Improved reliability of preview
+1. [](#new)
+    * Added option to set all pages as editable (site wide) to Admin Panel Plugin Configuration
+    
 # v1.3.0
 ##  11/22/2020
 
