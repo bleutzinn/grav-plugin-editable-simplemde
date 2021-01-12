@@ -1,8 +1,10 @@
 # v1.4.0
-##  01/11/2021
+##  01/12/2021
 
 1. [](#update)
     * Tested successfully with Grav v1.7.0-rc.20
+1. [](#bugfix)
+    * Fixed activating the editor on non editable pages by users with Administrator permissions
 1. [](#improved)
     * Improved reliability of preview
 1. [](#new)
