@@ -76,74 +76,89 @@ class EditableSimpleMDEPlugin extends Plugin
     public function isAuthorized($page, $username)
     {
         $result = false;
-        $config = $this->mergeConfig($page);
         
-        $editable_self = $config->get('self');
-        $editable_by = (array) $config->get('editable_by');
+        /* Why not simply do $config = $this->mergeConfig($page); ?
+           Normally that would be fine. However since the page will probably
+           be saved later on the page frontmatter will get an undesired
+           editable-simplemde:
+             config: merged
 
-        if ($editable_self || !is_null($editable_by)) { // Page is editable
+           So first get the frontmatter setting and if it's missing get the plugin setting.
+        */
 
-            // Allow editable to admin users
-            if ( $this->grav['user']->authorize('admin.super') || $this->grav['user']->authorize('admin.pages') ) {
-                $result = true;
-            }
-            else {
-                // Check for editable_by with named users and groups
-                $header = (array)$page->header();
+        $editable_self = $page->header()->get('editable-simplemde.self');
+        
+        if (is_null($editable_self)) {
+            $editable_self = $this->grav['config']->get('self');
+        }
 
-                // Get the groups this user is a member of
-                $user_in_groups = $this->grav['user']->get('groups');
-                
-                // Check whether only certain users or groups may edit this page
-                if (isset($editable_by)) {
+        if ($editable_self) {
+            $result = true;
+            $editable_by = (array) $this->grav['config']->get('editable_by');
+            if (!is_null($editable_by)) { // Check for specific edit permission
+
+                // Allow editable to admin users
+                if ( $this->grav['user']->authorize('admin.super') || $this->grav['user']->authorize('admin.pages') ) {
+                    $result = true;
+                }
+                else {
+                    // Check for editable_by with named users and groups
+                    $header = (array)$page->header();
+
+                    // Get the groups this user is a member of
+                    $user_in_groups = $this->grav['user']->get('groups');
                     
-                    foreach ($editable_by as $type => $list) {
-                        if($type !== 'groups') {
-                            $type = 'users';
-                        }
+                    // Check whether only certain users or groups may edit this page
+                    if (isset($editable_by)) {
                         
-                        if (!is_array($list)) {
+                        foreach ($editable_by as $type => $list) {
+                            if($type !== 'groups') {
+                                $type = 'users';
+                            }
                             
-                            if($type == 'groups' && !is_null($user_in_groups)) {
-                                $match = (in_array($list, array_values($user_in_groups))); // array_values() is required to convert to numeric array
-                                if($match) {
-                                    break; // Break from the foreach loop
-                                }
-                            }
-                            else {
-                                $match = ($list == $username);
-                                if($match) {
-                                    break; // Break from the foreach loop
-                                }
-                            }
-                        }
-                        else {
-                            foreach ($list as $key => $value) {
-                                if(!is_numeric($key)) {
-                                    $type = $key;
-                                }
-
-                                if (!is_array($value)) {
-                                    $value = (array) $value;
-                                }
+                            if (!is_array($list)) {
+                                
                                 if($type == 'groups' && !is_null($user_in_groups)) {
-                                    $match = !empty(array_intersect($value, $user_in_groups));
+                                    $match = (in_array($list, array_values($user_in_groups))); // array_values() is required to convert to numeric array
                                     if($match) {
-                                        break 2; // Break from the outer foreach loop
+                                        break; // Break from the foreach loop
                                     }
                                 }
                                 else {
-                                    $match = (in_array($username, $value));
+                                    $match = ($list == $username);
                                     if($match) {
-                                        break 2; // Break from the outer foreach loop
+                                        break; // Break from the foreach loop
                                     }
                                 }
+                            }
+                            else {
+                                foreach ($list as $key => $value) {
+                                    if(!is_numeric($key)) {
+                                        $type = $key;
+                                    }
 
+                                    if (!is_array($value)) {
+                                        $value = (array) $value;
+                                    }
+                                    if($type == 'groups' && !is_null($user_in_groups)) {
+                                        $match = !empty(array_intersect($value, $user_in_groups));
+                                        if($match) {
+                                            break 2; // Break from the outer foreach loop
+                                        }
+                                    }
+                                    else {
+                                        $match = (in_array($username, $value));
+                                        if($match) {
+                                            break 2; // Break from the outer foreach loop
+                                        }
+                                    }
+
+                                }
                             }
                         }
-                    }
 
-                    $result = $match;
+                        $result = $match;
+                    }
                 }
             }
         }
@@ -170,7 +185,7 @@ class EditableSimpleMDEPlugin extends Plugin
             $config = $this->mergeConfig($page);
             $editable_self = $config->get('self');
             $username = $this->grav['user']->get('username');
-            
+
             if ($editable_self || $this->isAuthorized($page, $username)) {
                 $this->addAssets();
                 $name = 'editable' . str_replace('/', '___', $page->route());
@@ -194,8 +209,6 @@ class EditableSimpleMDEPlugin extends Plugin
             return;
         }
 
-        $this->grav['log']->info('In onPagesInitialized()');
-
         // Do not act upon empty POST payload
         $post = $_POST;
         if (!$post) {
@@ -205,7 +218,7 @@ class EditableSimpleMDEPlugin extends Plugin
         // Check whether it's a non modular page and actions on this page are allowed
         $page = $this->grav['page'];
         if ($page->modular()) {
-            $this->grav['log']->warning($myNameFull . ' can\'t act on modular pages');
+            $this->grav['log']->warning($this->myNameFull . ' can\'t act on modular pages');
             return;
         }
         else { 
@@ -273,28 +286,18 @@ class EditableSimpleMDEPlugin extends Plugin
 
     /**
      * Process the Markdown content. Uses Parsedown or Parsedown Extra depending on configuration
-     * Taken from Grav/Common/Page/Page.php and modified to process a supplied page
+     * Taken from Grav/Common/Utils.php and modified to process a supplied page
      *
      * @return string containing HTML
      */
     public function processMarkdown($page, $params)
     {
-        /** @var Config $config */
-        $config = $this->grav['config'];
-        $defaults = (array)$config->get('system.pages.markdown');
-        
+        $defaults = $this->grav['config']->get('system.pages.markdown');
+
         if (isset($page->header()->markdown)) {
             $defaults = array_merge($defaults, $page->header()->markdown);
         }
 
-        if (isset($this->header->markdown_extra)) {
-            $markdown_extra = (bool)$this->header->markdown_extra;
-        }
-
-        // pages.markdown_extra is deprecated, but still check it...
-        if (!isset($defaults['extra']) && (isset($markdown_extra) || $config->get('system.pages.markdown_extra') !== null)) {
-            $defaults['extra'] = $markdown_extra ?: $config->get('system.pages.markdown_extra');
-        }
         // Initialize the preferred variant of Parsedown
         if ($defaults['extra']) {
             $parsedown = new ParsedownExtra(null, $defaults);
